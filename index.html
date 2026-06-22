@@ -3,28 +3,32 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TwinGuard AI — Transforming BIM Models into Intelligent Digital Twins</title>
+<title>TwinGuard — AI-Powered Digital Twin Platform for Intelligent Facilities</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============ TOKENS ============ */
 :root{
-  --navy:#003B73;
+  --navy:#0A2540;
+  --navy-deep:#061830;
   --ocean:#0077B6;
   --cyan:#00B4D8;
-  --cream:#F5F1E8;
-  --paper:#ECE5D5;
-  --paper-deep:#E2D9C4;
-  --ink:#1F2937;
-  --ink-soft:#4B5563;
-  --line:rgba(31,41,55,0.12);
-  --grid-line:rgba(0,59,115,0.07);
+  --cream:#F7F9FB;
+  --paper:#FFFFFF;
+  --paper-soft:#EEF2F6;
+  --ink:#101828;
+  --ink-soft:#4B5C70;
+  --line:rgba(16,24,40,0.09);
+  --line-soft:rgba(16,24,40,0.06);
+  --grid-line:rgba(10,37,64,0.06);
   --display:"Space Grotesk",sans-serif;
   --body:"Inter",sans-serif;
   --mono:"JetBrains Mono",monospace;
-  --radius:14px;
+  --radius:16px;
   --ease:cubic-bezier(.16,.8,.24,1);
+  --glass-bg:rgba(255,255,255,0.6);
+  --glass-border:rgba(255,255,255,0.5);
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -34,7 +38,7 @@ body{
   color:var(--ink);
   font-family:var(--body);
   overflow-x:hidden;
-  line-height:1.5;
+  line-height:1.55;
 }
 img,svg{display:block;max-width:100%;}
 a{color:inherit;text-decoration:none;}
@@ -49,7 +53,7 @@ ul{list-style:none;}
 
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
 
-/* ============ BACKGROUND BLUEPRINT GRID ============ */
+/* ============ BACKGROUND GRID ============ */
 .blueprint-bg{
   position:fixed;
   inset:0;
@@ -59,7 +63,7 @@ ul{list-style:none;}
     linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size:64px 64px;
-  opacity:0.6;
+  opacity:0.5;
 }
 
 /* ============ LAYOUT HELPERS ============ */
@@ -104,38 +108,46 @@ h1,h2,h3,h4{
 .section-sub{
   font-size:18px;
   color:var(--ink-soft);
-  max-width:560px;
+  max-width:600px;
   margin-top:16px;
   line-height:1.6;
 }
 .section-pad{padding:120px 0;}
 @media (max-width:768px){.section-pad{padding:80px 0;}}
 
-/* reveal-on-scroll */
 .reveal{
   opacity:0;
   transform:translateY(28px);
   transition:opacity .8s var(--ease), transform .8s var(--ease);
 }
 .reveal.in{opacity:1;transform:translateY(0);}
-.reveal-stagger > * {transition-delay:calc(var(--i,0) * 90ms);}
+.reveal-stagger > * {transition-delay:calc(var(--i,0) * 80ms);}
 
-/* ============ NAV ============ */
+/* ============ NAV (glassmorphism) ============ */
 header{
   position:fixed;
   top:0;left:0;right:0;
   z-index:100;
-  padding:18px 0;
-  transition:background .35s var(--ease), box-shadow .35s var(--ease), padding .35s var(--ease);
+  padding:20px 0;
+  transition:padding .35s var(--ease);
 }
-header.scrolled{
-  background:rgba(245,241,232,0.86);
-  backdrop-filter:blur(14px) saturate(140%);
-  box-shadow:0 1px 0 var(--line);
-  padding:12px 0;
+.nav-shell{
+  border-radius:0;
+  transition:background .35s var(--ease), box-shadow .35s var(--ease), border-radius .35s var(--ease), backdrop-filter .35s var(--ease);
+}
+header.scrolled{padding:14px 0;}
+header.scrolled .nav-shell{
+  background:var(--glass-bg);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  border:1px solid var(--glass-border);
+  box-shadow:0 8px 32px -12px rgba(10,37,64,0.18);
+  border-radius:16px;
+  margin:0 16px;
 }
 .nav-inner{
   display:flex;align-items:center;justify-content:space-between;
+  padding:6px 20px;
 }
 .logo{
   display:flex;align-items:center;gap:10px;
@@ -145,19 +157,9 @@ header.scrolled{
   color:var(--navy);
   white-space:nowrap;
 }
-@media (max-width:480px){
-  .logo{font-size:16.5px;gap:8px;}
-}
-.logo .mark{
-  width:30px;height:30px;
-  position:relative;
-}
-.nav-links{
-  display:flex;gap:36px;
-  font-size:14.5px;
-  font-weight:500;
-  color:var(--ink-soft);
-}
+@media (max-width:480px){.logo{font-size:16.5px;gap:8px;}}
+.logo .mark{width:30px;height:30px;position:relative;flex-shrink:0;}
+.nav-links{display:flex;gap:34px;font-size:14.5px;font-weight:500;color:var(--ink-soft);}
 .nav-links a{position:relative;padding:4px 0;transition:color .25s;}
 .nav-links a:hover{color:var(--navy);}
 .nav-links a::after{
@@ -165,89 +167,58 @@ header.scrolled{
   transition:width .3s var(--ease);
 }
 .nav-links a:hover::after{width:100%;}
-.nav-cta{
-  display:flex;align-items:center;gap:18px;
-}
+.nav-cta{display:flex;align-items:center;gap:14px;}
 .btn{
-  font-family:var(--body);
-  font-weight:600;
-  font-size:14.5px;
-  padding:11px 22px;
-  border-radius:9px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
+  font-family:var(--body);font-weight:600;font-size:14.5px;
+  padding:11px 22px;border-radius:10px;
+  display:inline-flex;align-items:center;gap:8px;
   transition:transform .25s var(--ease), box-shadow .25s var(--ease), background .25s;
   white-space:nowrap;
 }
 .btn-primary{
-  background:var(--navy);
-  color:var(--cream);
-  box-shadow:0 1px 2px rgba(0,59,115,0.2);
+  background:linear-gradient(135deg, var(--navy), var(--navy-deep));
+  color:#fff;
+  box-shadow:0 2px 8px rgba(10,37,64,0.25);
 }
-.btn-primary:hover{
-  background:#002a54;
-  transform:translateY(-2px);
-  box-shadow:0 10px 24px -8px rgba(0,59,115,0.45);
-}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(10,37,64,0.45);}
 .btn-ghost{
-  color:var(--navy);
-  font-weight:600;
-  font-size:14.5px;
-  padding:11px 18px;
-  border-radius:9px;
-  border:1px solid var(--line);
+  color:var(--navy);font-weight:600;font-size:14.5px;
+  padding:11px 18px;border-radius:10px;border:1px solid var(--line);
 }
-.btn-ghost:hover{background:rgba(0,59,115,0.06);}
+.btn-ghost:hover{background:rgba(10,37,64,0.05);}
+.btn-cyan{
+  background:var(--cyan);color:var(--navy-deep);
+  box-shadow:0 2px 10px rgba(0,180,216,0.35);
+}
+.btn-cyan:hover{transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(0,180,216,0.5);}
 .btn-arrow{transition:transform .3s var(--ease);}
 .btn:hover .btn-arrow{transform:translateX(3px);}
+
 .mobile-toggle{
-  display:none;
-  width:40px;height:40px;
-  border-radius:9px;
+  display:none;width:40px;height:40px;border-radius:9px;
   align-items:center;justify-content:center;
-  background:rgba(0,59,115,0.06);
-  color:var(--navy);
-  flex-shrink:0;
+  background:rgba(10,37,64,0.06);color:var(--navy);flex-shrink:0;
 }
 .mobile-toggle svg{width:20px;height:20px;}
-
 .mobile-menu{
-  display:none;
-  position:fixed;
-  top:0;left:0;right:0;bottom:0;
-  background:var(--cream);
-  z-index:99;
-  padding:100px 32px 40px;
-  flex-direction:column;
-  gap:6px;
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .3s var(--ease);
+  display:none;position:fixed;inset:0;background:var(--cream);z-index:99;
+  padding:100px 32px 40px;flex-direction:column;gap:6px;
+  opacity:0;pointer-events:none;transition:opacity .3s var(--ease);
 }
 .mobile-menu.open{opacity:1;pointer-events:auto;}
 .mobile-menu a{
-  font-family:var(--display);
-  font-size:24px;
-  font-weight:600;
-  color:var(--navy);
-  padding:16px 0;
-  border-bottom:1px solid var(--line);
+  font-family:var(--display);font-size:24px;font-weight:600;color:var(--navy);
+  padding:16px 0;border-bottom:1px solid var(--line);
 }
 .mobile-menu .btn{margin-top:24px;justify-content:center;}
 .mobile-close{
-  position:absolute;
-  top:18px;right:24px;
-  width:40px;height:40px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--navy);
+  position:absolute;top:18px;right:24px;width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;color:var(--navy);
 }
 .mobile-close svg{width:22px;height:22px;}
-
 @media (max-width:880px){
   .nav-links{display:none;}
-  .nav-cta .btn-ghost{display:none;}
-  .nav-cta .btn-primary{display:none;}
+  .nav-cta .btn-ghost, .nav-cta .btn-primary{display:none;}
   .mobile-toggle{display:flex;}
   .mobile-menu{display:flex;}
 }
@@ -255,598 +226,327 @@ header.scrolled{
 /* ============ HERO ============ */
 .hero{
   min-height:100vh;
-  display:flex;
-  align-items:center;
-  padding-top:140px;
-  padding-bottom:80px;
-  position:relative;
-  overflow:hidden;
+  display:flex;align-items:center;
+  padding-top:150px;padding-bottom:70px;
+  position:relative;overflow:hidden;
 }
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.05fr 0.95fr;
-  gap:50px;
-  align-items:center;
-}
-@media (max-width:980px){
-  .hero-grid{grid-template-columns:1fr;}
-  .hero{padding-top:120px;}
-}
+.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:50px;align-items:center;}
+@media (max-width:980px){.hero-grid{grid-template-columns:1fr;}.hero{padding-top:130px;}}
 .hero-tag{
   display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:12.5px;
-  color:var(--ocean);
-  background:rgba(0,119,182,0.08);
-  border:1px solid rgba(0,119,182,0.18);
-  padding:7px 14px;border-radius:100px;
-  margin-bottom:26px;
-  letter-spacing:0.03em;
+  font-family:var(--mono);font-size:12.5px;color:var(--ocean);
+  background:rgba(0,119,182,0.08);border:1px solid rgba(0,119,182,0.18);
+  padding:7px 14px;border-radius:100px;margin-bottom:26px;letter-spacing:0.03em;
 }
 .hero-tag .dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
-.hero h1{
-  font-size:clamp(40px,6vw,64px);
-  line-height:1.04;
-  font-weight:700;
-  color:var(--navy);
-}
-.hero h1 .accent{color:var(--cyan);position:relative;}
-.hero-sub{
-  font-family:var(--display);
-  font-size:clamp(18px,2.2vw,23px);
-  color:var(--ocean);
-  margin-top:18px;
-  font-weight:500;
-  max-width:520px;
-  line-height:1.4;
-}
-.hero-desc{
-  margin-top:22px;
-  font-size:16.5px;
-  color:var(--ink-soft);
-  max-width:520px;
-  line-height:1.7;
-}
-.hero-actions{
-  display:flex;gap:16px;margin-top:38px;flex-wrap:wrap;
-}
+.hero h1{font-size:clamp(38px,5.4vw,60px);line-height:1.08;font-weight:700;color:var(--navy);}
+.hero h1 .accent{color:var(--cyan);}
+.hero-sub{font-size:clamp(17px,2vw,20px);color:var(--ink-soft);margin-top:22px;max-width:540px;line-height:1.6;font-weight:500;}
+.hero-support{margin-top:14px;font-size:15.5px;color:var(--ink-soft);max-width:540px;line-height:1.7;}
+.hero-actions{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;}
 .hero-actions .btn{padding:14px 26px;font-size:15px;}
+.hero-tagline{
+  margin-top:40px;display:flex;align-items:center;gap:14px;
+  font-family:var(--mono);font-size:13px;color:var(--navy);font-weight:500;letter-spacing:0.02em;
+}
+.hero-tagline .seg{display:flex;align-items:center;gap:6px;}
+.hero-tagline .seg::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--cyan);}
+.hero-tagline .sep{color:var(--line);}
+@media (max-width:600px){.hero-tagline{flex-wrap:wrap;}}
 
-/* hero visual: blueprint -> twin */
-.hero-visual{
-  position:relative;
-  aspect-ratio:1/1;
-  max-width:560px;
-}
+.hero-visual{position:relative;aspect-ratio:1/1;max-width:560px;}
 .hero-visual svg{width:100%;height:100%;overflow:visible;}
-.bp-line{
-  stroke:var(--ocean);
-  stroke-width:1.1;
-  fill:none;
-  opacity:0.55;
-  stroke-dasharray:4 3;
-}
-.solid-shape{
-  fill:var(--navy);
-  opacity:0;
-  transform-origin:center;
-}
-.room-fill{
-  fill:var(--ocean);
-  opacity:0;
-}
-.glow-dot{
-  fill:var(--cyan);
-  filter:drop-shadow(0 0 6px rgba(0,180,216,0.9));
-}
+.bp-line{stroke:var(--ocean);stroke-width:1.1;fill:none;opacity:0.5;stroke-dasharray:4 3;}
+.room-fill{fill:var(--ocean);opacity:0;}
+.glow-dot{fill:var(--cyan);filter:drop-shadow(0 0 6px rgba(0,180,216,0.9));}
 .scan-sweep{
-  position:absolute;
-  top:0;left:0;right:0;
-  height:3px;
+  position:absolute;top:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg, transparent, var(--cyan), transparent);
   box-shadow:0 0 24px 4px rgba(0,180,216,0.55);
-  animation:sweep 5.5s ease-in-out infinite;
-  opacity:0.85;
+  animation:sweep 5.5s ease-in-out infinite;opacity:0.85;
 }
-@keyframes sweep{
-  0%{top:6%;}
-  50%{top:94%;}
-  100%{top:6%;}
-}
+@keyframes sweep{0%{top:6%;}50%{top:94%;}100%{top:6%;}}
 .hero-visual-frame{
   position:relative;
-  background:var(--paper);
-  border-radius:20px;
-  border:1px solid var(--line);
-  padding:36px;
-  overflow:hidden;
-  box-shadow:0 30px 60px -20px rgba(0,59,115,0.25);
+  background:var(--glass-bg);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-radius:22px;border:1px solid var(--glass-border);
+  padding:36px;overflow:hidden;
+  box-shadow:0 30px 70px -24px rgba(10,37,64,0.3);
 }
 .hero-visual-frame::before{
-  content:"";
-  position:absolute;inset:0;
+  content:"";position:absolute;inset:0;
   background-image:radial-gradient(circle at 30% 20%, rgba(0,180,216,0.10), transparent 55%);
   pointer-events:none;
 }
-.hud-label{
-  font-family:var(--mono);
-  font-size:10.5px;
-  fill:var(--ocean);
-  opacity:0.8;
-}
+.hud-label{font-family:var(--mono);font-size:10.5px;fill:var(--ocean);opacity:0.85;}
 
-/* hero stat strip */
-.hero-strip{
-  display:flex;gap:38px;margin-top:48px;flex-wrap:wrap;
-}
+.hero-strip{display:flex;gap:38px;margin-top:46px;flex-wrap:wrap;}
 .hero-strip .stat{font-family:var(--mono);font-size:12px;color:var(--ink-soft);}
-.hero-strip .stat b{display:block;font-family:var(--display);font-size:22px;color:var(--navy);font-weight:700;}
+.hero-strip .stat b{display:block;font-family:var(--display);font-size:21px;color:var(--navy);font-weight:700;}
 
-/* ============ PROBLEM SECTION ============ */
-.problem{background:var(--paper);}
-.compare-wrap{
-  margin-top:64px;
-  display:grid;
-  grid-template-columns:1fr auto 1fr;
-  gap:28px;
-  align-items:center;
-}
-@media (max-width:880px){.compare-wrap{grid-template-columns:1fr;}}
-.compare-card{
-  background:var(--cream);
-  border-radius:var(--radius);
-  border:1px solid var(--line);
-  padding:36px;
-  position:relative;
-  height:100%;
-}
-.compare-card.bad{
-  border-color:rgba(31,41,55,0.18);
-}
-.compare-card.good{
-  border-color:rgba(0,180,216,0.35);
-  box-shadow:0 20px 50px -24px rgba(0,59,115,0.35);
-}
-.compare-label{
-  font-family:var(--mono);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;
-  margin-bottom:18px;display:block;
-}
-.compare-card.bad .compare-label{color:#9CA3AF;}
-.compare-card.good .compare-label{color:var(--cyan);}
-.compare-card h4{font-size:21px;margin-bottom:18px;}
-.compare-card ul{display:flex;flex-direction:column;gap:12px;}
-.compare-card li{
-  font-size:14.5px;color:var(--ink-soft);
-  display:flex;gap:10px;align-items:flex-start;
-}
-.compare-card.bad li::before{content:"✕";color:#B45309;flex-shrink:0;font-size:13px;margin-top:1px;}
-.compare-card.good li::before{content:"✓";color:var(--ocean);flex-shrink:0;font-size:13px;margin-top:1px;}
-.vs-divider{
-  font-family:var(--display);font-weight:700;font-size:15px;
-  color:var(--cream);background:var(--navy);
-  width:48px;height:48px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  letter-spacing:0.02em;
-  box-shadow:0 8px 20px -6px rgba(0,59,115,0.5);
-}
-@media (max-width:880px){.vs-divider{margin:0 auto;}}
-
-.question-row{
-  margin-top:48px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:14px;
-}
-.q-chip{
-  font-size:14px;
-  color:var(--navy);
-  background:var(--cream);
-  border:1px solid var(--line);
-  padding:10px 18px;
-  border-radius:100px;
-  font-weight:500;
-}
-
-/* ============ SOLUTION SECTION ============ */
-.solution-grid{
+/* ============ WHAT IS TWINGUARD (hub diagram) ============ */
+.whatis{background:var(--paper);}
+.whatis-grid{
   margin-top:60px;
   display:grid;
-  grid-template-columns:repeat(7,1fr);
-  gap:14px;
+  grid-template-columns:0.95fr 1.05fr;
+  gap:60px;
+  align-items:center;
 }
+@media (max-width:980px){.whatis-grid{grid-template-columns:1fr;}}
+.whatis-copy p{font-size:16px;color:var(--ink-soft);line-height:1.75;margin-bottom:18px;}
+.whatis-copy p.lead{font-size:18px;color:var(--ink);font-weight:500;}
+.whatis-pillrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.whatis-pill{
+  font-size:13px;font-weight:600;color:var(--navy);
+  background:var(--paper-soft);border:1px solid var(--line);
+  padding:8px 14px;border-radius:100px;
+}
+.hub-wrap{position:relative;aspect-ratio:1/1;max-width:520px;margin:0 auto;}
+.hub-wrap svg{width:100%;height:100%;}
+.hub-center-circle{fill:var(--navy);}
+.hub-node-circle{fill:var(--paper);stroke:var(--ocean);stroke-width:1.4;}
+.hub-spoke{stroke:rgba(0,119,182,0.35);stroke-width:1.3;stroke-dasharray:3 4;}
+.hub-label{font-family:var(--body);font-size:11px;font-weight:600;fill:var(--navy);text-anchor:middle;}
+.hub-center-label{font-family:var(--display);font-size:13px;font-weight:700;fill:#fff;text-anchor:middle;}
+
+/* ============ PROBLEM ============ */
+.problem{background:var(--paper-soft);}
+.problem-grid{margin-top:56px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+@media (max-width:880px){.problem-grid{grid-template-columns:1fr;}}
+.problem-block h4{font-size:15px;font-family:var(--mono);text-transform:uppercase;letter-spacing:0.05em;color:var(--ink-soft);margin-bottom:18px;font-weight:500;}
+.tool-tags{display:flex;flex-wrap:wrap;gap:10px;}
+.tool-tag{
+  font-size:14px;color:var(--ink-soft);background:var(--paper);
+  border:1px solid var(--line);padding:9px 16px;border-radius:100px;
+  display:flex;align-items:center;gap:8px;
+}
+.tool-tag svg{width:14px;height:14px;color:#B45309;flex-shrink:0;}
+.consequence-list{display:flex;flex-direction:column;gap:0;}
+.consequence-row{
+  display:flex;gap:14px;align-items:flex-start;
+  padding:14px 0;border-bottom:1px solid var(--line);
+}
+.consequence-row:last-child{border-bottom:none;}
+.consequence-row svg{width:18px;height:18px;color:var(--ocean);flex-shrink:0;margin-top:2px;}
+.consequence-row p{font-size:14.5px;color:var(--ink);font-weight:500;}
+.problem-callout{
+  margin-top:50px;
+  background:var(--navy);
+  border-radius:var(--radius);
+  padding:36px 40px;
+  text-align:center;
+}
+.problem-callout p{color:#fff;font-family:var(--display);font-size:clamp(17px,2vw,21px);font-weight:500;line-height:1.5;}
+.problem-callout p .dim{color:rgba(255,255,255,0.55);}
+.problem-callout p .bright{color:var(--cyan);}
+
+/* ============ SOLUTION ============ */
+.solution-grid{margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
 @media (max-width:880px){.solution-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:540px){.solution-grid{grid-template-columns:1fr;}}
 .layer-pill{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:22px 16px;
-  text-align:center;
-  font-family:var(--display);
-  font-weight:600;
-  font-size:14.5px;
-  color:var(--navy);
-  position:relative;
+  background:var(--paper);border:1px solid var(--line);border-radius:12px;
+  padding:20px 16px;text-align:center;font-family:var(--display);font-weight:600;
+  font-size:14px;color:var(--navy);
   transition:transform .3s var(--ease), box-shadow .3s var(--ease), background .3s;
 }
-.layer-pill:hover{
-  transform:translateY(-6px);
-  background:var(--navy);
-  color:var(--cream);
-  box-shadow:0 16px 30px -12px rgba(0,59,115,0.4);
-}
-.layer-pill .layer-icon{
-  width:30px;height:30px;margin:0 auto 12px;
-  color:var(--ocean);
-}
-.layer-pill:hover .layer-icon{color:var(--cyan);}
+.layer-pill:hover{transform:translateY(-5px);background:var(--navy);color:#fff;box-shadow:0 16px 30px -12px rgba(10,37,64,0.4);}
 
-.raw-vs-organized{
-  margin-top:56px;
-  display:flex;
-  align-items:center;
-  gap:0;
-  background:var(--paper);
-  border-radius:var(--radius);
-  border:1px solid var(--line);
-  overflow:hidden;
+.capability-row{margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+@media (max-width:880px){.capability-row{grid-template-columns:1fr;}}
+.capability-col h4{
+  font-size:15px;color:var(--navy);margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
 }
-.rvo-side{flex:1;padding:40px;}
-.rvo-side.raw{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);line-height:1.9;}
-.rvo-side.raw .ifc-line{opacity:0.7;}
-.rvo-side.raw .ifc-line span{color:var(--ocean);}
-.rvo-arrow{
-  padding:0 28px;color:var(--cyan);flex-shrink:0;
+.capability-col h4 .num{
+  font-family:var(--mono);font-size:12px;color:var(--cyan);
+  width:26px;height:26px;border:1.5px solid var(--cyan);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
-.rvo-side.organized{display:flex;flex-direction:column;gap:10px;}
-.org-row{
-  display:flex;align-items:center;gap:12px;
-  font-size:14.5px;color:var(--navy);font-weight:500;
-  font-family:var(--body);
-}
-.org-row .org-dot{width:8px;height:8px;border-radius:2px;background:var(--cyan);flex-shrink:0;}
-@media (max-width:760px){.raw-vs-organized{flex-direction:column;}.rvo-arrow{transform:rotate(90deg);padding:14px 0;}}
+.capability-col ul{display:flex;flex-direction:column;gap:9px;padding-left:36px;}
+.capability-col li{font-size:14px;color:var(--ink-soft);position:relative;}
+.capability-col li::before{content:"";position:absolute;left:-16px;top:8px;width:5px;height:5px;border-radius:50%;background:var(--ocean);}
 
-/* ============ FEATURES ============ */
-.features-grid{
-  margin-top:60px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:20px;
+.intelligence-line{
+  margin-top:50px;
+  display:flex;align-items:center;justify-content:center;gap:18px;
+  background:var(--paper);border:1px solid var(--line);border-radius:100px;
+  padding:18px 30px;flex-wrap:wrap;
 }
-@media (max-width:980px){.features-grid{grid-template-columns:repeat(2,1fr);}}
-@media (max-width:560px){.features-grid{grid-template-columns:1fr;}}
-.feature-card{
-  background:var(--cream);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:30px 26px;
-  transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
-  position:relative;
-  overflow:hidden;
+.intelligence-line .il-tag{
+  font-family:var(--mono);font-size:13px;color:var(--ink-soft);
 }
-.feature-card::before{
+.intelligence-line .il-tag.strong{color:var(--navy);font-weight:600;}
+.intelligence-line .il-arrow{color:var(--cyan);}
+
+/* ============ CAPABILITIES (platform features) ============ */
+.capabilities-grid{margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+@media (max-width:980px){.capabilities-grid{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.capabilities-grid{grid-template-columns:1fr;}}
+.cap-card{
+  background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:26px 22px;transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
+  position:relative;overflow:hidden;
+}
+.cap-card::before{
   content:"";position:absolute;top:0;left:0;right:0;height:0;
-  background:linear-gradient(135deg, rgba(0,180,216,0.12), transparent 60%);
+  background:linear-gradient(135deg, rgba(0,180,216,0.1), transparent 60%);
   transition:height .4s var(--ease);
 }
-.feature-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 24px 44px -20px rgba(0,59,115,0.3);
-  border-color:rgba(0,180,216,0.4);
+.cap-card:hover{transform:translateY(-6px);box-shadow:0 22px 40px -18px rgba(10,37,64,0.28);border-color:rgba(0,180,216,0.4);}
+.cap-card:hover::before{height:100%;}
+.cap-icon{
+  width:42px;height:42px;border-radius:10px;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;color:var(--cyan);
+  margin-bottom:16px;position:relative;z-index:1;transition:transform .35s var(--ease), background .35s;
 }
-.feature-card:hover::before{height:100%;}
-.feature-icon{
-  width:46px;height:46px;
-  border-radius:11px;
-  background:var(--navy);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--cyan);
-  margin-bottom:20px;
-  position:relative;z-index:1;
-  transition:transform .35s var(--ease), background .35s;
-}
-.feature-card:hover .feature-icon{background:var(--ocean);transform:scale(1.08) rotate(-4deg);}
-.feature-icon svg{width:22px;height:22px;}
-.feature-card h4{font-size:18px;margin-bottom:10px;position:relative;z-index:1;}
-.feature-card p{font-size:14px;color:var(--ink-soft);line-height:1.65;position:relative;z-index:1;}
+.cap-card:hover .cap-icon{background:var(--ocean);transform:scale(1.08) rotate(-3deg);}
+.cap-icon svg{width:20px;height:20px;}
+.cap-card h4{font-size:15.5px;margin-bottom:8px;position:relative;z-index:1;line-height:1.3;}
+.cap-card p{font-size:13px;color:var(--ink-soft);line-height:1.55;position:relative;z-index:1;}
 
-/* ============ HOW IT WORKS ============ */
+/* ============ HOW IT WORKS (4 step) ============ */
 .howit{background:var(--paper);}
-.timeline{
-  margin-top:70px;
-  position:relative;
-}
-.timeline-track{
-  position:absolute;
-  top:28px;left:0;right:0;
-  height:2px;
-  background:repeating-linear-gradient(90deg, var(--ocean) 0 8px, transparent 8px 16px);
-  opacity:0.35;
-  z-index:0;
-}
-@media (max-width:900px){.timeline-track{display:none;}}
-.timeline-row{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
-  gap:18px;
-  position:relative;
-  z-index:1;
-}
-@media (max-width:900px){.timeline-row{grid-template-columns:1fr;gap:28px;}}
-.step{
-  display:flex;flex-direction:column;
-  align-items:flex-start;
-}
-.step-num{
-  width:56px;height:56px;
-  border-radius:50%;
-  background:var(--cream);
-  border:2px solid var(--ocean);
+.process-row{margin-top:64px;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;position:relative;}
+@media (max-width:880px){.process-row{grid-template-columns:1fr;gap:32px;}}
+.process-track{position:absolute;top:30px;left:0;right:0;height:2px;background:repeating-linear-gradient(90deg, var(--ocean) 0 8px, transparent 8px 16px);opacity:0.3;z-index:0;}
+@media (max-width:880px){.process-track{display:none;}}
+.process-step{position:relative;z-index:1;}
+.process-num{
+  width:60px;height:60px;border-radius:16px;
+  background:var(--paper-soft);border:2px solid var(--ocean);
   display:flex;align-items:center;justify-content:center;
-  font-family:var(--mono);font-size:15px;font-weight:500;color:var(--navy);
-  margin-bottom:20px;
-  transition:background .35s, color .35s, transform .35s var(--ease);
-  flex-shrink:0;
+  font-family:var(--mono);font-size:16px;font-weight:500;color:var(--navy);
+  margin-bottom:22px;transition:background .35s, color .35s, transform .35s var(--ease);
 }
-.step:hover .step-num{background:var(--navy);color:var(--cyan);border-color:var(--navy);transform:scale(1.07);}
-.step h4{font-size:16.5px;margin-bottom:8px;}
-.step p{font-size:13.5px;color:var(--ink-soft);line-height:1.6;}
+.process-step:hover .process-num{background:var(--navy);color:var(--cyan);border-color:var(--navy);transform:scale(1.06) rotate(-2deg);}
+.process-step h4{font-size:18px;margin-bottom:10px;}
+.process-step p{font-size:14px;color:var(--ink-soft);line-height:1.65;}
 
-/* ============ DIGITAL TWIN EXPERIENCE ============ */
-.twin-showcase{
-  margin-top:64px;
-  display:grid;
-  grid-template-columns:0.9fr 1.1fr;
-  gap:50px;
-  align-items:center;
-}
-@media (max-width:900px){.twin-showcase{grid-template-columns:1fr;}}
-.twin-list{display:flex;flex-direction:column;gap:22px;}
-.twin-item{
-  display:flex;gap:16px;
-  padding:18px;
-  border-radius:12px;
-  cursor:pointer;
-  transition:background .3s;
-  border:1px solid transparent;
-}
-.twin-item:hover, .twin-item.active{
-  background:var(--paper);
-  border-color:var(--line);
-}
-.twin-item .ti-num{
-  font-family:var(--mono);font-size:12px;color:var(--cyan);flex-shrink:0;padding-top:3px;
-}
-.twin-item h4{font-size:16px;margin-bottom:4px;}
-.twin-item p{font-size:13.5px;color:var(--ink-soft);}
-.twin-mock{
-  background:var(--navy);
-  border-radius:18px;
-  padding:4px;
-  box-shadow:0 40px 70px -30px rgba(0,59,115,0.5);
-}
-.twin-mock-inner{
-  background:#022c54;
-  border-radius:15px;
-  padding:26px;
-  aspect-ratio:4/3.1;
-  position:relative;
-  overflow:hidden;
-}
-.twin-mock-bar{
-  display:flex;gap:6px;margin-bottom:18px;
-}
-.twin-mock-bar span{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,0.18);}
-.twin-grid-mock{
-  position:absolute;inset:26px;top:60px;
-  background-image:linear-gradient(rgba(0,180,216,0.12) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,216,0.12) 1px, transparent 1px);
-  background-size:28px 28px;
-  border-radius:8px;
-}
-
-/* ============ USE CASES ============ */
-.usecase-grid{
-  margin-top:60px;
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:18px;
-}
+/* ============ INDUSTRIES ============ */
+.usecase-grid{margin-top:56px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
 @media (max-width:980px){.usecase-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:560px){.usecase-grid{grid-template-columns:1fr;}}
 .usecase-card{
-  background:var(--paper);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:26px;
-  transition:transform .3s var(--ease), background .3s;
+  background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:26px;transition:transform .3s var(--ease), background .3s, border-color .3s;
 }
-.usecase-card:hover{transform:translateY(-5px);background:var(--navy);}
-.usecase-card:hover h4, .usecase-card:hover p{color:var(--cream);}
-.usecase-card:hover .uc-icon{color:var(--cyan);background:rgba(255,255,255,0.1);}
+.usecase-card:hover{transform:translateY(-5px);background:var(--navy);border-color:var(--navy);}
+.usecase-card:hover h4, .usecase-card:hover p{color:#fff;}
+.usecase-card:hover p{color:rgba(255,255,255,0.75);}
+.usecase-card:hover .uc-icon{color:var(--cyan);background:rgba(255,255,255,0.12);}
 .uc-icon{
-  width:42px;height:42px;border-radius:10px;
-  background:rgba(0,119,182,0.1);
-  color:var(--ocean);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:16px;
-  transition:background .3s, color .3s;
+  width:42px;height:42px;border-radius:10px;background:rgba(0,119,182,0.1);
+  color:var(--ocean);display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;transition:background .3s, color .3s;
 }
 .uc-icon svg{width:20px;height:20px;}
 .usecase-card h4{font-size:16px;margin-bottom:8px;transition:color .3s;}
 .usecase-card p{font-size:13.5px;color:var(--ink-soft);line-height:1.6;transition:color .3s;}
 
-/* ============ WHY / STATS ============ */
-.why{background:var(--paper);}
-.why-grid{
-  margin-top:60px;
-  display:grid;
-  grid-template-columns:1.1fr 0.9fr;
-  gap:50px;
-}
+/* ============ WHY ============ */
+.why{background:var(--paper-soft);}
+.why-grid{margin-top:56px;display:grid;grid-template-columns:1.1fr 0.9fr;gap:50px;}
 @media (max-width:900px){.why-grid{grid-template-columns:1fr;}}
-.benefit-list{display:flex;flex-direction:column;gap:0;}
-.benefit-row{
-  display:flex;gap:16px;align-items:flex-start;
-  padding:20px 0;
-  border-bottom:1px solid var(--line);
-}
+.benefit-row{display:flex;gap:16px;align-items:flex-start;padding:20px 0;border-bottom:1px solid var(--line);}
 .benefit-row:last-child{border-bottom:none;}
 .benefit-check{
-  width:24px;height:24px;border-radius:50%;
-  background:var(--navy);color:var(--cyan);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;margin-top:2px;
+  width:24px;height:24px;border-radius:50%;background:var(--navy);color:var(--cyan);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
 }
 .benefit-check svg{width:13px;height:13px;}
 .benefit-row p{font-size:15.5px;color:var(--ink);font-weight:500;}
 .stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.stat-card{
-  background:var(--cream);
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:26px 22px;
-}
-.stat-card .stat-num{
-  font-family:var(--display);font-size:36px;font-weight:700;color:var(--navy);
-  display:flex;align-items:baseline;gap:2px;
-}
+.stat-card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px 22px;}
+.stat-card .stat-num{font-family:var(--display);font-size:36px;font-weight:700;color:var(--navy);display:flex;align-items:baseline;gap:2px;}
 .stat-card .stat-num .unit{font-size:20px;color:var(--cyan);}
 .stat-card .stat-label{font-size:12.5px;color:var(--ink-soft);margin-top:8px;line-height:1.5;}
 
 /* ============ VISION ============ */
-.vision{
-  background:var(--navy);
-  color:var(--cream);
-  position:relative;
-  overflow:hidden;
-}
+.vision{background:var(--navy);color:#fff;position:relative;overflow:hidden;}
 .vision::before{
   content:"";position:absolute;inset:0;
   background-image:linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size:56px 56px;
 }
+.vision::after{
+  content:"";position:absolute;top:-10%;right:-10%;width:50%;height:60%;
+  background:radial-gradient(circle, rgba(0,180,216,0.18), transparent 70%);
+  pointer-events:none;
+}
 .vision .eyebrow{color:var(--cyan);}
 .vision .eyebrow::before{background:var(--cyan);}
-.vision h2{color:var(--cream);}
-.vision-content{
-  position:relative;z-index:1;
-  max-width:740px;
-}
-.vision p.lead{
-  font-size:clamp(20px,2.6vw,28px);
-  font-family:var(--display);
-  font-weight:500;
-  line-height:1.45;
-  margin-top:28px;
-  color:#E8F4FA;
-}
-.vision-tags{
-  display:flex;gap:12px;margin-top:36px;flex-wrap:wrap;
-}
+.vision h2{color:#fff;}
+.vision-content{position:relative;z-index:1;max-width:760px;}
+.vision p.lead{font-size:clamp(20px,2.6vw,28px);font-family:var(--display);font-weight:500;line-height:1.45;margin-top:28px;color:#E8F4FA;}
+.vision-tags{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap;}
 .vision-tags span{
-  font-family:var(--mono);font-size:12.5px;
-  border:1px solid rgba(0,180,216,0.4);
-  color:var(--cyan);
-  padding:8px 16px;border-radius:100px;
+  font-family:var(--mono);font-size:12.5px;border:1px solid rgba(0,180,216,0.4);
+  color:var(--cyan);padding:8px 16px;border-radius:100px;
 }
 
 /* ============ TEAM ============ */
-.team-grid{
-  margin-top:64px;
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:20px;
-}
+.team-grid{margin-top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:20px;}
 @media (max-width:1100px){.team-grid{grid-template-columns:repeat(3,1fr);}}
 @media (max-width:700px){.team-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:480px){.team-grid{grid-template-columns:1fr;}}
 .team-card{
-  background:var(--cream);
-  border:1px solid var(--line);
-  border-radius:16px;
-  padding:34px 24px 28px;
-  text-align:center;
+  background:var(--paper);border:1px solid var(--line);border-radius:16px;
+  padding:34px 24px 28px;text-align:center;
   transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
 }
-.team-card:hover{
-  transform:translateY(-8px);
-  box-shadow:0 26px 44px -20px rgba(0,59,115,0.32);
-  border-color:rgba(0,180,216,0.35);
-}
+.team-card:hover{transform:translateY(-8px);box-shadow:0 26px 44px -20px rgba(10,37,64,0.28);border-color:rgba(0,180,216,0.35);}
 .team-photo{
-  width:104px;height:104px;
-  border-radius:50%;
-  margin:0 auto 20px;
-  background:linear-gradient(135deg, var(--paper-deep), var(--paper));
+  width:104px;height:104px;border-radius:50%;margin:0 auto 20px;
+  background:linear-gradient(135deg, var(--paper-soft), #fff);
   border:2px dashed rgba(0,119,182,0.35);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--ocean);
-  position:relative;
-  transition:border-color .3s, transform .35s var(--ease);
+  display:flex;align-items:center;justify-content:center;color:var(--ocean);
+  position:relative;transition:border-color .3s, transform .35s var(--ease);
 }
 .team-card:hover .team-photo{border-color:var(--cyan);transform:scale(1.04);}
 .team-photo svg{width:40px;height:40px;opacity:0.6;}
 .team-card h4{font-size:17px;margin-bottom:8px;color:var(--navy);}
-.team-role{
-  font-size:13.5px;font-weight:600;color:var(--ink);
-  margin-bottom:10px;line-height:1.4;
-  min-height:36px;
-  display:flex;align-items:center;justify-content:center;
-}
+.team-role{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:10px;line-height:1.4;min-height:36px;display:flex;align-items:center;justify-content:center;}
 .team-spec{
-  font-family:var(--mono);font-size:11px;color:var(--ocean);
-  text-transform:uppercase;letter-spacing:0.04em;
-  margin-bottom:22px;line-height:1.5;
-  min-height:32px;
-  display:flex;align-items:center;justify-content:center;
-  padding:0 4px;
+  font-family:var(--mono);font-size:11px;color:var(--ocean);text-transform:uppercase;
+  letter-spacing:0.04em;margin-bottom:22px;line-height:1.5;min-height:32px;
+  display:flex;align-items:center;justify-content:center;padding:0 4px;
 }
 .team-linkedin{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:12.5px;font-weight:600;color:var(--ocean);
-  border:1px solid var(--line);
-  padding:9px 18px;border-radius:100px;
+  display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ocean);
+  border:1px solid var(--line);padding:9px 18px;border-radius:100px;
   transition:background .3s, color .3s, border-color .3s;
 }
-.team-linkedin:hover{background:var(--navy);color:var(--cream);border-color:var(--navy);}
+.team-linkedin:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
 .team-linkedin svg{width:13px;height:13px;}
 
 /* ============ FOOTER ============ */
-footer{
-  background:var(--navy);
-  color:rgba(245,241,232,0.7);
-  padding:70px 0 30px;
-  position:relative;
-}
+footer{background:var(--navy);color:rgba(255,255,255,0.7);padding:70px 0 30px;position:relative;}
 .footer-top{
-  display:flex;justify-content:space-between;align-items:flex-start;
-  flex-wrap:wrap;gap:40px;
-  padding-bottom:44px;
-  border-bottom:1px solid rgba(245,241,232,0.14);
+  display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:40px;
+  padding-bottom:44px;border-bottom:1px solid rgba(255,255,255,0.14);
 }
-.footer-brand .logo{color:var(--cream);}
-.footer-brand p{margin-top:14px;max-width:320px;font-size:14.5px;line-height:1.6;color:rgba(245,241,232,0.65);}
+.footer-brand .logo{color:#fff;}
+.footer-brand p{margin-top:14px;max-width:320px;font-size:14.5px;line-height:1.6;color:rgba(255,255,255,0.6);}
+.footer-links{display:flex;gap:48px;flex-wrap:wrap;}
+.footer-col h5{font-family:var(--mono);font-size:12px;text-transform:uppercase;letter-spacing:0.05em;color:rgba(255,255,255,0.45);margin-bottom:16px;}
+.footer-col a{display:block;font-size:14.5px;color:rgba(255,255,255,0.75);margin-bottom:12px;transition:color .25s;}
+.footer-col a:hover{color:var(--cyan);}
 .footer-social{display:flex;gap:12px;}
 .footer-social a{
-  width:38px;height:38px;border-radius:50%;
-  border:1px solid rgba(245,241,232,0.2);
-  display:flex;align-items:center;justify-content:center;
-  transition:background .3s, border-color .3s;
+  width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.2);
+  display:flex;align-items:center;justify-content:center;transition:background .3s, border-color .3s;
 }
 .footer-social a:hover{background:var(--cyan);border-color:var(--cyan);color:var(--navy);}
 .footer-social svg{width:16px;height:16px;}
 .footer-bottom{
-  display:flex;justify-content:space-between;align-items:center;
-  padding-top:26px;
-  font-size:13px;
-  flex-wrap:wrap;gap:14px;
-  color:rgba(245,241,232,0.5);
+  display:flex;justify-content:space-between;align-items:center;padding-top:26px;
+  font-size:13px;flex-wrap:wrap;gap:14px;color:rgba(255,255,255,0.5);
 }
-.footer-bottom .fb-links{display:flex;gap:24px;}
-
-/* generic icon sizing in svg defs */
-.icon{width:100%;height:100%;}
 </style>
 </head>
 <body>
@@ -854,30 +554,32 @@ footer{
 <div class="blueprint-bg" aria-hidden="true"></div>
 
 <header id="siteHeader">
-  <div class="wrap nav-inner">
-    <a href="#top" class="logo">
-      <span class="mark">
-        <svg viewBox="0 0 30 30" fill="none">
-          <rect x="2" y="2" width="26" height="26" rx="6" fill="#003B73"/>
-          <path d="M9 19V11L15 7L21 11V19L15 23L9 19Z" stroke="#00B4D8" stroke-width="1.6" fill="none"/>
-          <circle cx="15" cy="15" r="2" fill="#00B4D8"/>
-        </svg>
-      </span>
-      TwinGuard AI
-    </a>
-    <nav class="nav-links">
-      <a href="#problem">Problem</a>
-      <a href="#features">Features</a>
-      <a href="#how">How It Works</a>
-      <a href="#usecases">Use Cases</a>
-      <a href="#team">Team</a>
-    </nav>
-    <div class="nav-cta">
-      <a href="#team" class="btn-ghost">Meet Our Team</a>
-      <a href="#features" class="btn btn-primary">Explore TwinGuard <span class="btn-arrow">→</span></a>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      </button>
+  <div class="nav-shell">
+    <div class="wrap nav-inner">
+      <a href="#top" class="logo">
+        <span class="mark">
+          <svg viewBox="0 0 30 30" fill="none">
+            <rect x="2" y="2" width="26" height="26" rx="6" fill="#0A2540"/>
+            <path d="M9 19V11L15 7L21 11V19L15 23L9 19Z" stroke="#00B4D8" stroke-width="1.6" fill="none"/>
+            <circle cx="15" cy="15" r="2" fill="#00B4D8"/>
+          </svg>
+        </span>
+        TwinGuard
+      </a>
+      <nav class="nav-links">
+        <a href="#whatis">Platform</a>
+        <a href="#solution">Solution</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#industries">Industries</a>
+        <a href="#team">Team</a>
+      </nav>
+      <div class="nav-cta">
+        <a href="#capabilities" class="btn-ghost">Explore Platform</a>
+        <a href="#demo" class="btn btn-primary">Request a Demo <span class="btn-arrow">→</span></a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+      </div>
     </div>
   </div>
 </header>
@@ -886,32 +588,37 @@ footer{
   <button class="mobile-close" id="mobileClose" aria-label="Close menu">
     <svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
   </button>
-  <a href="#problem">Problem</a>
-  <a href="#features">Features</a>
-  <a href="#how">How It Works</a>
-  <a href="#usecases">Use Cases</a>
+  <a href="#whatis">Platform</a>
+  <a href="#solution">Solution</a>
+  <a href="#capabilities">Capabilities</a>
+  <a href="#industries">Industries</a>
   <a href="#team">Team</a>
-  <a href="#features" class="btn btn-primary">Explore TwinGuard →</a>
+  <a href="#demo" class="btn btn-primary">Request a Demo →</a>
 </div>
 
 <main id="top">
 
   <!-- ============ HERO ============ -->
-  <section class="hero">
+  <section class="hero" id="demo">
     <div class="wrap hero-grid">
       <div>
-        <div class="hero-tag"><span class="dot"></span> DIGITAL TWIN PLATFORM FOR BIM & IFC</div>
-        <h1>Twin<span class="accent">Guard</span> AI</h1>
-        <p class="hero-sub">Transforming BIM Models into Intelligent Digital Twins</p>
-        <p class="hero-desc">TwinGuard AI transforms complex BIM and IFC models into interactive digital environments where users can navigate rooms, inspect assets, monitor facilities, and simulate emergency operations — in a simple, intuitive way.</p>
+        <div class="hero-tag"><span class="dot"></span> AI-POWERED DIGITAL TWIN PLATFORM</div>
+        <h1>Transform Buildings Into <span class="accent">Intelligent Digital Twins</span></h1>
+        <p class="hero-sub">TwinGuard turns BIM and IFC models into living digital environments that help organizations understand, operate, and protect facilities in real time.</p>
+        <p class="hero-support">Monitor operations, locate assets, improve safety, simulate emergencies, and gain complete facility visibility through a single intelligent platform.</p>
         <div class="hero-actions">
-          <a href="#features" class="btn btn-primary">Explore TwinGuard <span class="btn-arrow">→</span></a>
-          <a href="#team" class="btn btn-ghost">Meet Our Team</a>
+          <a href="#contact" class="btn btn-cyan">Request a Demo <span class="btn-arrow">→</span></a>
+          <a href="#capabilities" class="btn btn-ghost">Explore Platform</a>
+        </div>
+        <div class="hero-tagline">
+          <span class="seg">See Earlier.</span><span class="sep">/</span>
+          <span class="seg">Decide Faster.</span><span class="sep">/</span>
+          <span class="seg">Operate Smarter.</span>
         </div>
         <div class="hero-strip">
-          <div class="stat"><b>IFC → 3D</b>Model ingestion</div>
-          <div class="stat"><b>Room-Level</b>Spatial intelligence</div>
-          <div class="stat"><b>Real-Time</b>Emergency simulation</div>
+          <div class="stat"><b>8 Layers</b>Unified intelligence</div>
+          <div class="stat"><b>Room-Level</b>Operational detail</div>
+          <div class="stat"><b>Real-Time</b>Facility visibility</div>
         </div>
       </div>
 
@@ -919,7 +626,6 @@ footer{
         <div class="hero-visual-frame">
           <div class="scan-sweep"></div>
           <svg viewBox="0 0 480 480" id="heroSvg">
-            <!-- blueprint wireframe building -->
             <g id="bpGroup">
               <rect class="bp-line" x="60" y="80" width="360" height="320"/>
               <line class="bp-line" x1="60" y1="200" x2="420" y2="200"/>
@@ -928,7 +634,6 @@ footer{
               <line class="bp-line" x1="300" y1="80" x2="300" y2="400"/>
               <circle class="bp-line" cx="240" cy="240" r="150" stroke-dasharray="2 5"/>
             </g>
-            <!-- solid rooms that fade in -->
             <g id="solidGroup">
               <rect class="room-fill" x="64" y="84" width="112" height="112" rx="3"/>
               <rect class="room-fill" x="184" y="84" width="112" height="112" rx="3"/>
@@ -940,7 +645,6 @@ footer{
               <rect class="room-fill" x="184" y="324" width="112" height="72" rx="3"/>
               <rect class="room-fill" x="304" y="324" width="112" height="72" rx="3"/>
             </g>
-            <!-- asset/people dots -->
             <circle class="glow-dot" cx="120" cy="140" r="5"/>
             <circle class="glow-dot" cx="360" cy="140" r="5"/>
             <circle class="glow-dot" cx="240" cy="260" r="5"/>
@@ -954,45 +658,71 @@ footer{
     </div>
   </section>
 
+  <!-- ============ WHAT IS TWINGUARD ============ -->
+  <section class="whatis section-pad" id="whatis">
+    <div class="wrap">
+      <div class="eyebrow">What Is TwinGuard?</div>
+      <h2 class="section-title reveal">One platform. Every layer of facility intelligence.</h2>
+
+      <div class="whatis-grid">
+        <div class="whatis-copy reveal">
+          <p class="lead">TwinGuard is an AI-powered Digital Twin Platform that transforms static BIM and IFC building models into intelligent operational environments.</p>
+          <p>Rather than serving only as a BIM viewer, TwinGuard combines digital twin technology, facility intelligence, AI analytics, emergency planning, asset tracking, occupancy monitoring, operational visibility, and room-aware navigation into one connected system.</p>
+          <p>The platform creates a living representation of a facility where managers, operators, safety teams, maintenance teams, and occupants can understand spaces, locate assets, monitor operations, simulate emergencies, and make better decisions — all from one environment.</p>
+          <p>TwinGuard helps organizations move beyond static building models and toward intelligent facilities that are understandable, interactive, and actionable in real time.</p>
+          <div class="whatis-pillrow">
+            <span class="whatis-pill">Digital Twin Technology</span>
+            <span class="whatis-pill">Facility Intelligence</span>
+            <span class="whatis-pill">AI Analytics</span>
+            <span class="whatis-pill">Emergency Planning</span>
+            <span class="whatis-pill">Asset Tracking</span>
+            <span class="whatis-pill">Occupancy Monitoring</span>
+            <span class="whatis-pill">Operational Visibility</span>
+            <span class="whatis-pill">Room-Aware Navigation</span>
+          </div>
+        </div>
+
+        <div class="hub-wrap reveal" id="hubWrap">
+          <!-- rendered via JS for clean spoke math -->
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ PROBLEM ============ -->
   <section class="problem section-pad" id="problem">
     <div class="wrap">
       <div class="eyebrow">The Problem</div>
-      <h2 class="section-title reveal">Why current BIM systems are difficult</h2>
-      <p class="section-sub reveal">Building Information Modeling has transformed how buildings are designed and constructed. But once a building is finished, the model that described it so precisely becomes almost impossible for anyone outside the engineering team to use. BIM and IFC viewers are built around geometry and coordinates, not around the people who actually have to operate, manage, or move through the building every day.</p>
+      <h2 class="section-title reveal">Facility data exists. Facility intelligence doesn't.</h2>
+      <p class="section-sub reveal">Most buildings already have BIM or IFC models, but after construction these models often go unused, disconnected from daily operations, or too complex for non-technical teams to rely on.</p>
 
-      <div class="compare-wrap reveal">
-        <div class="compare-card bad">
-          <span class="compare-label">Traditional BIM Viewer</span>
-          <h4>Built for engineers, not people</h4>
-          <ul>
-            <li>Raw geometry with no functional labels</li>
-            <li>Object names like IFCWALLSTANDARDCASE instead of "Room 204"</li>
-            <li>Navigation that requires CAD experience</li>
-            <li>Every wall, duct, and beam shown at once</li>
-            <li>No way to ask a simple question and get a simple answer</li>
-          </ul>
+      <div class="problem-grid reveal">
+        <div class="problem-block">
+          <h4>What Teams Still Depend On</h4>
+          <div class="tool-tags">
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2l1 20M18 2l-1 20M3 7h18M3 17h18"/></svg> Floor plans</span>
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg> Excel sheets</span>
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg> Manual reports</span>
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg> Phone calls</span>
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> Disconnected systems</span>
+            <span class="tool-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Outdated records</span>
+          </div>
         </div>
-        <div class="vs-divider">VS</div>
-        <div class="compare-card good">
-          <span class="compare-label">TwinGuard AI</span>
-          <h4>Built for understanding</h4>
-          <ul>
-            <li>Buildings organized into floors, rooms, and assets</li>
-            <li>Spaces labeled the way people actually refer to them</li>
-            <li>Click-to-explore navigation, no CAD background needed</li>
-            <li>Information surfaced only when it's relevant</li>
-            <li>Usable by facility staff, investors, and first-time visitors alike</li>
-          </ul>
+        <div class="problem-block">
+          <h4>What This Creates</h4>
+          <div class="consequence-list">
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Weak facility visibility</p></div>
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Slow emergency response</p></div>
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Poor operational awareness</p></div>
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Inefficient maintenance processes</p></div>
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Difficulty locating rooms and assets</p></div>
+            <div class="consequence-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg><p>Fragmented decision-making</p></div>
+          </div>
         </div>
       </div>
 
-      <div class="question-row reveal">
-        <span class="q-chip">Where am I?</span>
-        <span class="q-chip">What room is this?</span>
-        <span class="q-chip">Where is the nearest exit?</span>
-        <span class="q-chip">Which assets are located here?</span>
-        <span class="q-chip">What happens during emergencies?</span>
+      <div class="problem-callout reveal">
+        <p><span class="dim">The challenge is not a lack of data.</span><br>The challenge is transforming facility data into <span class="bright">usable operational intelligence.</span></p>
       </div>
     </div>
   </section>
@@ -1001,51 +731,55 @@ footer{
   <section class="solution section-pad" id="solution">
     <div class="wrap">
       <div class="eyebrow">The Solution</div>
-      <h2 class="section-title reveal">TwinGuard AI changes the experience</h2>
-      <p class="section-sub reveal">TwinGuard AI is a platform that converts BIM and IFC models into intelligent digital twins. It doesn't replace your model — it sits on top of it, reading the same geometry and data your design team already produced, and reorganizing it into a structure that matches how a building actually gets used and operated.</p>
+      <h2 class="section-title reveal">TwinGuard is the intelligence layer between facility data and facility decisions</h2>
+      <p class="section-sub reveal">TwinGuard transforms BIM and IFC models into intelligent digital twins, organizing every facility into layers that match how it's actually run.</p>
 
       <div class="solution-grid reveal reveal-stagger">
         <div class="layer-pill" style="--i:0">Buildings</div>
         <div class="layer-pill" style="--i:1">Floors</div>
         <div class="layer-pill" style="--i:2">Rooms</div>
         <div class="layer-pill" style="--i:3">Assets</div>
-        <div class="layer-pill" style="--i:4">People</div>
-        <div class="layer-pill" style="--i:5">Energy</div>
-        <div class="layer-pill" style="--i:6">Safety Ops</div>
+        <div class="layer-pill" style="--i:4">Equipment</div>
+        <div class="layer-pill" style="--i:5">Occupancy Zones</div>
+        <div class="layer-pill" style="--i:6">Safety Layers</div>
+        <div class="layer-pill" style="--i:7">Operational Layers</div>
       </div>
 
-      <div class="raw-vs-organized reveal">
-        <div class="rvo-side raw">
-          <div class="ifc-line">#142=<span>IFCWALLSTANDARDCASE</span>('3x7r..',#1);</div>
-          <div class="ifc-line">#143=<span>IFCDOOR</span>('a91k..',#88,'D-204');</div>
-          <div class="ifc-line">#144=<span>IFCSPACE</span>('Zn_b3',#22,'SP-12B');</div>
-          <div class="ifc-line">#145=<span>IFCFLOWTERMINAL</span>('hv01',#9);</div>
-          <div class="ifc-line">#146=<span>IFCRELCONTAINEDIN</span>(#142,#144);</div>
+      <div class="capability-row reveal">
+        <div class="capability-col">
+          <h4><span class="num">01</span>Navigate & Locate</h4>
+          <ul>
+            <li>Navigate facilities visually</li>
+            <li>Access room-level information</li>
+            <li>Locate assets instantly</li>
+          </ul>
         </div>
-        <div class="rvo-arrow">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="capability-col">
+          <h4><span class="num">02</span>Monitor & Analyze</h4>
+          <ul>
+            <li>Analyze operational conditions</li>
+            <li>Monitor occupancy</li>
+          </ul>
         </div>
-        <div class="rvo-side organized">
-          <div class="org-row"><span class="org-dot"></span> Room SP-12B — Office, Floor 2</div>
-          <div class="org-row"><span class="org-dot"></span> Door D-204 — Main entrance</div>
-          <div class="org-row"><span class="org-dot"></span> HVAC unit — Active, normal range</div>
-          <div class="org-row"><span class="org-dot"></span> Nearest exit — 24m, east corridor</div>
-          <div class="org-row"><span class="org-dot"></span> Occupancy — 3 people detected</div>
+        <div class="capability-col">
+          <h4><span class="num">03</span>Prepare & Support</h4>
+          <ul>
+            <li>Simulate emergency scenarios</li>
+            <li>Support maintenance decisions</li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ FEATURES ============ -->
-  <section class="features section-pad" id="features">
+  <!-- ============ CAPABILITIES ============ -->
+  <section class="features section-pad" id="capabilities">
     <div class="wrap">
-      <div class="eyebrow">Key Features</div>
-      <h2 class="section-title reveal">Everything you need to understand a building</h2>
-      <p class="section-sub reveal">From day-to-day navigation to emergency response, these are the capabilities that turn a static BIM model into a digital twin people can actually rely on.</p>
+      <div class="eyebrow">Platform Capabilities</div>
+      <h2 class="section-title reveal">A complete operational toolkit, not just a viewer</h2>
+      <p class="section-sub reveal">Every capability below works together inside one connected platform — not as a separate add-on.</p>
 
-      <div class="features-grid reveal reveal-stagger" id="featuresGrid">
-        <!-- injected by JS for icon reuse, but written statically for content clarity -->
-      </div>
+      <div class="capabilities-grid reveal reveal-stagger" id="capabilitiesGrid"></div>
     </div>
   </section>
 
@@ -1053,91 +787,67 @@ footer{
   <section class="howit section-pad" id="how">
     <div class="wrap">
       <div class="eyebrow">How TwinGuard Works</div>
-      <h2 class="section-title reveal">From raw model to living twin in six steps</h2>
-      <p class="section-sub reveal">TwinGuard follows the same pipeline for every building it processes, so the result stays consistent and accurate regardless of how complex the original model is.</p>
+      <h2 class="section-title reveal">From building model to operational intelligence in four steps</h2>
+      <p class="section-sub reveal">The same reliable process runs underneath every deployment, regardless of facility size or complexity.</p>
 
-      <div class="timeline reveal">
-        <div class="timeline-track"></div>
-        <div class="timeline-row">
-          <div class="step"><div class="step-num">01</div><h4>Upload BIM / IFC Model</h4><p>Bring in the model your design or engineering team already produced — no rebuilding or reformatting required.</p></div>
-          <div class="step"><div class="step-num">02</div><h4>Extract Floors & Rooms</h4><p>TwinGuard reads the underlying geometry and identifies the building's floors, rooms, and boundaries automatically.</p></div>
-          <div class="step"><div class="step-num">03</div><h4>Classify Building Spaces</h4><p>Each space is labeled by function — office, corridor, mechanical room — based on its layout and contents.</p></div>
-          <div class="step"><div class="step-num">04</div><h4>Generate Digital Twin</h4><p>The classified spaces are assembled into a single interactive twin that visitors can navigate room by room.</p></div>
-          <div class="step"><div class="step-num">05</div><h4>Manage Operations</h4><p>Assets, occupancy, and energy data are layered onto the twin so facility teams can track them in real time.</p></div>
-          <div class="step"><div class="step-num">06</div><h4>Monitor Safety & Emergencies</h4><p>Exit routes and emergency scenarios are simulated against the twin, ready before they're ever needed in practice.</p></div>
+      <div class="process-row reveal">
+        <div class="process-track"></div>
+        <div class="process-step">
+          <div class="process-num">01</div>
+          <h4>Connect BIM / IFC Models</h4>
+          <p>Upload or connect your existing BIM and IFC models — no rebuilding or reformatting required.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">02</div>
+          <h4>Create the Digital Twin</h4>
+          <p>TwinGuard automatically organizes floors, rooms, zones, assets, and equipment into one structure.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">03</div>
+          <h4>Add Operational Intelligence</h4>
+          <p>Overlay occupancy, safety systems, assets, emergency routes, alerts, and live facility information.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">04</div>
+          <h4>Monitor, Analyze & Act</h4>
+          <p>Use the digital twin to understand, search, simulate, manage, and optimize operations day to day.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ DIGITAL TWIN EXPERIENCE ============ -->
-  <section class="twin-experience section-pad" id="experience">
+  <!-- ============ INDUSTRIES ============ -->
+  <section class="usecases section-pad" id="industries">
     <div class="wrap">
-      <div class="eyebrow">Digital Twin Experience</div>
-      <h2 class="section-title reveal">Walk through your building, not just a model</h2>
-      <p class="section-sub reveal">A digital twin should feel like the building itself, not a technical drawing of it. This is what that looks like in practice.</p>
-
-      <div class="twin-showcase reveal">
-        <div class="twin-list">
-          <div class="twin-item active"><span class="ti-num">01</span><div><h4>Explore buildings</h4><p>Move between buildings on a connected campus view, the same way you'd walk between them on site.</p></div></div>
-          <div class="twin-item"><span class="ti-num">02</span><div><h4>Navigate floors</h4><p>Switch floors instantly from a single click, without repositioning a camera or searching a menu.</p></div></div>
-          <div class="twin-item"><span class="ti-num">03</span><div><h4>Enter rooms</h4><p>Step inside any room to see its actual layout, function, and current occupancy status.</p></div></div>
-          <div class="twin-item"><span class="ti-num">04</span><div><h4>Inspect assets</h4><p>Select any piece of equipment to see its status, maintenance history, and technical specifications.</p></div></div>
-          <div class="twin-item"><span class="ti-num">05</span><div><h4>Understand layouts</h4><p>See how rooms and corridors connect across a floor, making spatial relationships obvious at a glance.</p></div></div>
-          <div class="twin-item"><span class="ti-num">06</span><div><h4>Simulate emergencies</h4><p>Run evacuation scenarios on the twin itself, well before a real emergency puts the plan to the test.</p></div></div>
-        </div>
-        <div class="twin-mock">
-          <div class="twin-mock-inner">
-            <div class="twin-mock-bar"><span></span><span></span><span></span></div>
-            <svg viewBox="0 0 400 300" style="position:relative;z-index:1;">
-              <rect x="20" y="20" width="170" height="120" rx="4" fill="#0077B6" opacity="0.85"/>
-              <rect x="210" y="20" width="170" height="120" rx="4" fill="#00B4D8" opacity="0.5"/>
-              <rect x="20" y="160" width="170" height="100" rx="4" fill="#00B4D8" opacity="0.35"/>
-              <rect x="210" y="160" width="170" height="100" rx="4" fill="#0077B6" opacity="0.65"/>
-              <circle cx="105" cy="80" r="5" fill="#F5F1E8"/>
-              <circle cx="295" cy="80" r="5" fill="#F5F1E8"/>
-              <circle cx="105" cy="210" r="5" fill="#F5F1E8"/>
-              <path d="M105 80 L295 80 L295 210" stroke="#F5F1E8" stroke-width="1.5" stroke-dasharray="4 4" fill="none" opacity="0.6"/>
-            </svg>
-            <div class="twin-grid-mock"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ USE CASES ============ -->
-  <section class="usecases section-pad" id="usecases">
-    <div class="wrap">
-      <div class="eyebrow">Use Cases</div>
-      <h2 class="section-title reveal">Built for any facility that matters</h2>
-      <p class="section-sub reveal">TwinGuard works on any building with a BIM or IFC model behind it. Here's how that plays out across different types of facilities.</p>
+      <div class="eyebrow">Industry Applications</div>
+      <h2 class="section-title reveal">Built for Facilities That Matter</h2>
+      <p class="section-sub reveal">TwinGuard adapts to any environment where visibility, safety, operations, and decision-making are critical.</p>
 
       <div class="usecase-grid reveal reveal-stagger" id="usecaseGrid"></div>
     </div>
   </section>
 
-  <!-- ============ WHY TWINGUARD ============ -->
+  <!-- ============ WHY ============ -->
   <section class="why section-pad" id="why">
     <div class="wrap">
-      <div class="eyebrow">Why TwinGuard AI</div>
-      <h2 class="section-title reveal">Less complexity. More clarity.</h2>
-      <p class="section-sub reveal">Every layer TwinGuard adds is designed to remove a barrier between people and the buildings they use.</p>
+      <div class="eyebrow">Why TwinGuard</div>
+      <h2 class="section-title reveal">Less Complexity. More Clarity.</h2>
+      <p class="section-sub reveal">Every layer TwinGuard adds removes barriers between people and the facilities they depend on.</p>
 
       <div class="why-grid reveal">
         <div class="benefit-list">
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Anyone can understand a building, not just the engineers who designed it</p></div>
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Facility visibility extends down to individual rooms, not just whole floors</p></div>
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Emergency teams respond faster with simulated routes, not paper maps</p></div>
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Decisions are backed by live facility data instead of outdated records</p></div>
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Teams share one operational view instead of working from separate spreadsheets</p></div>
-          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>BIM complexity is handled once, at the model layer, not every time someone opens the file</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Anyone can understand a building, not only the engineers who designed it</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Visibility extends to individual rooms rather than only entire floors</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Emergency teams respond faster using simulated routes</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Decisions are based on live facility intelligence</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>Teams share one operational view</p></div>
+          <div class="benefit-row"><span class="benefit-check"><svg viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><p>BIM complexity is hidden behind an intuitive interface</p></div>
         </div>
         <div class="stat-cards">
-          <div class="stat-card"><div class="stat-num">6<span class="unit">layers</span></div><div class="stat-label">Operational layers organized from a single model</div></div>
-          <div class="stat-card"><div class="stat-num">1<span class="unit">click</span></div><div class="stat-label">To go from floor view to room view</div></div>
-          <div class="stat-card"><div class="stat-num">7<span class="unit">sectors</span></div><div class="stat-label">Facility types supported out of the box</div></div>
-          <div class="stat-card"><div class="stat-num">∞<span class="unit">scale</span></div><div class="stat-label">From single rooms to full multi-building campuses</div></div>
+          <div class="stat-card"><div class="stat-num">6<span class="unit">Layers</span></div><div class="stat-label">Operational layers organized from one model</div></div>
+          <div class="stat-card"><div class="stat-num">1<span class="unit">Click</span></div><div class="stat-label">From floor view to room view</div></div>
+          <div class="stat-card"><div class="stat-num">7<span class="unit">Industries</span></div><div class="stat-label">Ready-to-use facility applications</div></div>
+          <div class="stat-card"><div class="stat-num">∞<span class="unit">Scale</span></div><div class="stat-label">From a single room to multi-building campuses</div></div>
         </div>
       </div>
     </div>
@@ -1147,12 +857,12 @@ footer{
   <section class="vision section-pad" id="vision">
     <div class="wrap vision-content">
       <div class="eyebrow">Project Vision</div>
-      <h2 class="reveal">The future of intelligent facilities</h2>
-      <p class="lead reveal">Most buildings already have a BIM model sitting somewhere, unused once construction ends. TwinGuard AI is built on the belief that this model should keep working long after the building opens — as the foundation for how it's operated, maintained, and protected. The long-term goal is a digital twin that stays current as the building changes, flags problems before they escalate, and gives every person who relies on the building, not just the people who built it, a clear picture of where they are and what's happening around them.</p>
+      <h2 class="reveal">The Future of Intelligent Facilities</h2>
+      <p class="lead reveal">Most buildings already have BIM models sitting unused after construction. TwinGuard is built on the belief that these models should continue working throughout the entire lifecycle of a facility. Our vision is to create intelligent digital twins that remain current as buildings evolve, identify problems before they escalate, and provide every stakeholder with a clear understanding of their environment.</p>
       <div class="vision-tags reveal">
-        <span>Understandable by design</span>
-        <span>Interactive by default</span>
-        <span>Actionable in real time</span>
+        <span>Understandable by Design</span>
+        <span>Interactive by Default</span>
+        <span>Actionable in Real Time</span>
       </div>
     </div>
   </section>
@@ -1161,8 +871,8 @@ footer{
   <section class="team section-pad" id="team">
     <div class="wrap">
       <div class="eyebrow">Meet Our Team</div>
-      <h2 class="section-title reveal">Meet the Team Behind TwinGuard AI</h2>
-      <p class="section-sub reveal">A multidisciplinary team bringing together expertise in Artificial Intelligence, Cyber Security, Architecture Engineering, Industrial Engineering, and Digital Twin Technologies.</p>
+      <h2 class="section-title reveal">Meet the Team Behind TwinGuard</h2>
+      <p class="section-sub reveal">A multidisciplinary team combining Artificial Intelligence, Cyber Security, Architecture Engineering, Industrial Engineering, and Digital Twin expertise.</p>
 
       <div class="team-grid reveal reveal-stagger" id="teamGrid"></div>
     </div>
@@ -1170,7 +880,7 @@ footer{
 
 </main>
 
-<footer>
+<footer id="contact">
   <div class="wrap">
     <div class="footer-top">
       <div class="footer-brand">
@@ -1182,64 +892,107 @@ footer{
               <circle cx="15" cy="15" r="2" fill="#00B4D8"/>
             </svg>
           </span>
-          TwinGuard AI
+          TwinGuard
         </a>
         <p>Building the next generation of intelligent digital twins.</p>
+        <div class="footer-social" style="margin-top:24px;">
+          <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14zM8.34 18.34V10.6H5.67v7.74h2.67zM7 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.34 18.34v-4.27c0-2.29-1.23-3.36-2.87-3.36-1.32 0-1.91.73-2.24 1.24v-1.06h-2.67c.04.78 0 7.45 0 7.45h2.67v-4.16c0-.22.02-.44.08-.6.18-.44.6-.91 1.3-.91.92 0 1.29.7 1.29 1.72v3.95h2.44z"/></svg></a>
+          <a href="#" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H21.6L15.6 10.1L22.6 19H17L12.6 13.5L7.5 19H4.7L11.2 11.4L4.5 3H10.2L14.2 8L18.9 3ZM17.4 17.3H19L8.7 4.6H7L17.4 17.3Z"/></svg></a>
+          <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.76 1.02a9.6 9.6 0 015.02 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.65.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .26.18.57.69.48A10 10 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
+        </div>
       </div>
-      <div class="footer-social">
-        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14zM8.34 18.34V10.6H5.67v7.74h2.67zM7 9.5a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.34 18.34v-4.27c0-2.29-1.23-3.36-2.87-3.36-1.32 0-1.91.73-2.24 1.24v-1.06h-2.67c.04.78 0 7.45 0 7.45h2.67v-4.16c0-.22.02-.44.08-.6.18-.44.6-.91 1.3-.91.92 0 1.29.7 1.29 1.72v3.95h2.44z"/></svg></a>
-        <a href="#" aria-label="Twitter/X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H21.6L15.6 10.1L22.6 19H17L12.6 13.5L7.5 19H4.7L11.2 11.4L4.5 3H10.2L14.2 8L18.9 3ZM17.4 17.3H19L8.7 4.6H7L17.4 17.3Z"/></svg></a>
-        <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.5.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.08.63-1.33-2.22-.25-4.56-1.11-4.56-4.95 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.76 1.02a9.6 9.6 0 015.02 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.65.7 1.03 1.59 1.03 2.68 0 3.85-2.34 4.7-4.57 4.95.36.31.68.92.68 1.85v2.75c0 .26.18.57.69.48A10 10 0 0022 12c0-5.52-4.48-10-10-10z"/></svg></a>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a href="#top">Home</a>
+          <a href="#problem">Problem</a>
+          <a href="#solution">Solution</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#industries">Industries</a>
+          <a href="#vision">Vision</a>
+          <a href="#team">Team</a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 TwinGuard AI. All rights reserved.</span>
-      <div class="fb-links">
-        <a href="#problem">Problem</a>
-        <a href="#features">Features</a>
-        <a href="#team">Team</a>
-      </div>
+      <span>© 2026 TwinGuard. All rights reserved.</span>
     </div>
   </div>
 </footer>
 
 <script>
 /* ============ DATA ============ */
-const features = [
-  {icon:'<path d="M3 11l9-8 9 8M5 10v10h14V10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Interactive BIM Navigation", desc:"Move through a building the way you'd actually walk it — floor by floor, room by room — without ever touching a CAD tool or learning a technical interface."},
-  {icon:'<rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M4 10h16M10 4v16" stroke="currentColor" stroke-width="1.8"/>', title:"Room-Level Digital Twin", desc:"Every room is modeled as its own explorable space, complete with its layout, function, and contents — so a visitor can understand one room without needing the whole building explained first."},
-  {icon:'<rect x="5" y="7" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M9 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Asset Management", desc:"Equipment, furniture, and building systems are tied to their real location, so anyone can find out what's in a room, what condition it's in, and when it was last serviced."},
-  {icon:'<path d="M13 3L4 14h6l-1 7 9-11h-6l1-7z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/>', title:"Energy Monitoring", desc:"Consumption is tracked at the floor and room level instead of one building-wide number, making it possible to spot which spaces are driving usage and why."},
-  {icon:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/>', title:"Emergency Operations", desc:"During an incident, responders get a live view of occupied rooms, exit status, and hazard locations — replacing static evacuation maps with information that reflects what's happening right now."},
-  {icon:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M5 19l5-7M19 19l-5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>', title:"Evacuation Simulation", desc:"Run evacuation scenarios on the digital twin before an emergency ever happens, testing how occupants would move through corridors and exits under different conditions."},
-  {icon:'<rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Facility Intelligence", desc:"Buildings, floors, rooms, and assets are connected in one structure, so a change in one room's status is visible immediately at the floor and building level too."},
-  {icon:'<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M9 10c0-1.5 1.2-2.5 3-2.5s3 1 3 2.3c0 1.5-3 1.7-3 3.7M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>', title:"AI Assistant", desc:"Ask a direct question about the facility — where something is, who's nearby, what's nearest to a room — and get an answer drawn from the live state of the twin, not a manual search."}
+const hubNodes = [
+  "Digital Twin\nTechnology","Facility\nIntelligence","AI\nAnalytics","Emergency\nPlanning",
+  "Asset\nTracking","Occupancy\nMonitoring","Operational\nVisibility","Room-Aware\nNavigation"
+];
+
+const capabilities = [
+  {icon:'<path d="M3 11l9-8 9 8M5 10v10h14V10" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"BIM / IFC Viewer", desc:"Read existing BIM and IFC models directly, without manual rebuilding or reformatting."},
+  {icon:'<rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M4 10h16M10 4v16" stroke="currentColor" stroke-width="1.8"/>', title:"Digital Twin Visualization", desc:"See the full facility as a connected, interactive twin rather than a static drawing."},
+  {icon:'<path d="M3 9l9-7 9 7M5 9v11h14V9" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 21V12h6v9" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Floor Navigation", desc:"Move between floors instantly, with each level organized for fast, intuitive access."},
+  {icon:'<rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><path d="M4 16l4-4 3 3 5-5 4 4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Room Intelligence", desc:"Every room carries its own layout, function, and live status, ready on demand."},
+  {icon:'<rect x="5" y="7" width="14" height="11" rx="2" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M9 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Asset Tracking", desc:"Locate equipment and furniture by real position, not by guesswork or memory."},
+  {icon:'<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>', title:"Equipment Monitoring", desc:"Track operating status and maintenance history for critical building systems."},
+  {icon:'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/>', title:"Occupancy Visibility", desc:"See how many people are in a room, floor, or building, updated in real time."},
+  {icon:'<path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.6" fill="none"/>', title:"Emergency Route Simulation", desc:"Model evacuation paths and exit performance before a real emergency occurs."},
+  {icon:'<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M9 10c0-1.5 1.2-2.5 3-2.5s3 1 3 2.3c0 1.5-3 1.7-3 3.7M12 17h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>', title:"AI Insights", desc:"Surface patterns and answer direct questions drawn from the live state of the twin."},
+  {icon:'<rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Facility Dashboard", desc:"One unified view that brings occupancy, assets, and safety status together."},
+  {icon:'<circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8" fill="none"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>', title:"Building Search & Navigation", desc:"Search for a room, asset, or person and get directed there instantly."},
+  {icon:'<rect x="3" y="11" width="6" height="10" rx="1" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="15" y="6" width="6" height="15" rx="1" stroke="currentColor" stroke-width="1.8" fill="none"/><rect x="9" y="3" width="6" height="18" rx="1" stroke="currentColor" stroke-width="1.8" fill="none"/>', title:"Multi-Building Support", desc:"Manage single buildings or entire multi-building campuses from one platform."}
 ];
 
 const usecases = [
-  {icon:'<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M9 9h1M9 13h1M14 9h1M14 13h1M9 21v-4h6v4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Hospital", desc:"Locate patient rooms and critical equipment instantly, and simulate evacuation routes across wards where every second matters."},
-  {icon:'<path d="M3 21h18M5 21V10l4-3v3l4-3v3l4-3v11M5 10h14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Factory", desc:"Monitor production floors and machinery status by zone, with clear visibility into worker safety areas."},
-  {icon:'<rect x="4" y="3" width="16" height="18" rx="1" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 7h2M8 11h2M8 15h2M14 7h2M14 11h2M14 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', title:"Data Center", desc:"Map server racks, cooling zones, and access-controlled rooms so technicians can find the right rack without a floor plan in hand."},
-  {icon:'<path d="M3 9l2-6h14l2 6M3 9v11h18V9M3 9h18M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Mall", desc:"Help visitors find stores, exits, and amenities, while operations teams track foot traffic by zone."},
-  {icon:'<path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"University", desc:"Guide students and staff across campus buildings and lecture halls, and plan emergency response for large gatherings."},
-  {icon:'<rect x="3" y="4" width="18" height="16" rx="1" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 9h18M9 4v16" stroke="currentColor" stroke-width="1.6"/>', title:"Office Building", desc:"Track desk and meeting room occupancy floor by floor, and keep evacuation plans current as teams move and grow."},
-  {icon:'<path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Warehouse", desc:"Locate inventory zones and optimize layout decisions across large open floor plans with minimal manual mapping."}
+  {icon:'<path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16M9 9h1M9 13h1M14 9h1M14 13h1M9 21v-4h6v4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Hospital", desc:"Locate patient rooms and critical equipment instantly while supporting emergency planning and evacuation procedures."},
+  {icon:'<path d="M3 21h18M5 21V10l4-3v3l4-3v3l4-3v11M5 10h14" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Factory", desc:"Monitor production floors, equipment locations, operational zones, and worker safety areas."},
+  {icon:'<rect x="4" y="3" width="16" height="18" rx="1" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M8 7h2M8 11h2M8 15h2M14 7h2M14 11h2M14 15h2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>', title:"Data Center", desc:"Track server rooms, cooling infrastructure, and restricted-access areas with precision."},
+  {icon:'<path d="M3 9l2-6h14l2 6M3 9v11h18V9M3 9h18M9 20v-6h6v6" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Mall", desc:"Guide visitors to stores, exits, and amenities while supporting operational visibility."},
+  {icon:'<path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"University", desc:"Help students and staff navigate campus facilities and improve emergency preparedness."},
+  {icon:'<rect x="3" y="4" width="18" height="16" rx="1" stroke="currentColor" stroke-width="1.6" fill="none"/><path d="M3 9h18M9 4v16" stroke="currentColor" stroke-width="1.6"/>', title:"Office Building", desc:"Track occupancy, meeting rooms, workspaces, and evacuation planning across floors."},
+  {icon:'<path d="M3 21V8l9-5 9 5v13M9 21v-7h6v7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>', title:"Warehouse", desc:"Locate inventory zones and optimize operations across large-scale facilities."}
 ];
 
 const team = [
-  {n:"Amer Abu Rabi'e", r:"Project Lead & AI Engineer", s:"Data Science & Artificial Intelligence"},
+  {n:"Amer Abu Rabi'e", r:"AI Engineer & Software", s:"Data Science & Artificial Intelligence"},
   {n:"Ibrahim Alsanie", r:"Cyber Security Engineer", s:"Cyber Security"},
   {n:"Raghad Yaseen", r:"BIM & Digital Twin Designer", s:"Architecture Engineering"},
   {n:"Aseel Abdelaziz", r:"Architectural Design & BIM Specialist", s:"Architecture Engineering"},
-  {n:"Nour AlZubi", r:"Operations & Process Engineering Specialist", s:"Industrial Engineering"}
+  {n:"Nour AlZubi", r:"Project Lead & Process Engineering Specialist", s:"Industrial Engineering"}
 ];
 
-/* ============ RENDER ============ */
-function renderFeatures(){
-  const grid = document.getElementById('featuresGrid');
-  grid.innerHTML = features.map((f,i)=>`
-    <div class="feature-card" style="--i:${i}">
-      <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none">${f.icon}</svg></div>
+/* ============ RENDER: HUB DIAGRAM ============ */
+function renderHub(){
+  const wrap = document.getElementById('hubWrap');
+  const cx = 260, cy = 260, r = 195, nodeR = 62;
+  const n = hubNodes.length;
+  let spokes = '', nodes = '';
+  hubNodes.forEach((label, i)=>{
+    const angle = (Math.PI * 2 * i / n) - Math.PI/2;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    spokes += `<line class="hub-spoke" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/>`;
+    const lines = label.split('\n');
+    const textLines = lines.map((l,li)=>`<text class="hub-label" x="${x}" y="${y + (li - (lines.length-1)/2)*13}">${l}</text>`).join('');
+    nodes += `<circle class="hub-node-circle" cx="${x}" cy="${y}" r="${nodeR*0.46}"/>${textLines}`;
+  });
+  wrap.innerHTML = `<svg viewBox="0 0 520 520">
+    ${spokes}
+    <circle class="hub-center-circle" cx="${cx}" cy="${cy}" r="78"/>
+    <text class="hub-center-label" x="${cx}" y="${cy-6}">TwinGuard</text>
+    <text class="hub-center-label" x="${cx}" y="${cy+14}" style="font-size:10px;opacity:0.7;font-weight:500;">Platform</text>
+    ${nodes}
+  </svg>`;
+}
+
+/* ============ RENDER: CARDS ============ */
+function renderCapabilities(){
+  const grid = document.getElementById('capabilitiesGrid');
+  grid.innerHTML = capabilities.map((f,i)=>`
+    <div class="cap-card" style="--i:${i}">
+      <div class="cap-icon"><svg viewBox="0 0 24 24" fill="none">${f.icon}</svg></div>
       <h4>${f.title}</h4>
       <p>${f.desc}</p>
     </div>
@@ -1272,7 +1025,8 @@ function renderTeam(){
   `).join('');
 }
 
-renderFeatures();
+renderHub();
+renderCapabilities();
 renderUsecases();
 renderTeam();
 
@@ -1288,6 +1042,12 @@ const io = new IntersectionObserver((entries)=>{
 },{threshold:0.12, rootMargin:'0px 0px -40px 0px'});
 revealEls.forEach(el=>io.observe(el));
 
+/* ============ HEADER SCROLL STATE ============ */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', ()=>{
+  header.classList.toggle('scrolled', window.scrollY > 20);
+}, {passive:true});
+
 /* ============ MOBILE MENU ============ */
 const mobileToggle = document.getElementById('mobileToggle');
 const mobileMenu = document.getElementById('mobileMenu');
@@ -1298,25 +1058,15 @@ mobileToggle?.addEventListener('click', openMobileMenu);
 mobileClose?.addEventListener('click', closeMobileMenu);
 mobileMenu?.querySelectorAll('a').forEach(a=> a.addEventListener('click', closeMobileMenu));
 
-/* ============ HEADER SCROLL STATE ============ */
-const header = document.getElementById('siteHeader');
-window.addEventListener('scroll', ()=>{
-  header.classList.toggle('scrolled', window.scrollY > 20);
-}, {passive:true});
-
 /* ============ HERO BLUEPRINT -> SOLID ANIMATION ============ */
 window.addEventListener('DOMContentLoaded', ()=>{
   const rooms = document.querySelectorAll('#solidGroup .room-fill');
-  const bp = document.getElementById('bpGroup');
   rooms.forEach((r,i)=>{
     r.style.transition = `opacity .6s ease ${0.4 + i*0.09}s`;
   });
   requestAnimationFrame(()=>{
-    setTimeout(()=>{
-      rooms.forEach(r=> r.style.opacity = 0.16);
-    }, 200);
+    setTimeout(()=>{ rooms.forEach(r=> r.style.opacity = 0.16); }, 200);
   });
-  // gentle pulse loop for room fills to feel "alive"
   let pulseUp = true;
   setInterval(()=>{
     rooms.forEach((r,i)=>{
@@ -1325,15 +1075,6 @@ window.addEventListener('DOMContentLoaded', ()=>{
     });
     pulseUp = !pulseUp;
   }, 2600);
-});
-
-/* ============ TWIN ITEM ACTIVE STATE ============ */
-const twinItems = document.querySelectorAll('.twin-item');
-twinItems.forEach(item=>{
-  item.addEventListener('click', ()=>{
-    twinItems.forEach(i=>i.classList.remove('active'));
-    item.classList.add('active');
-  });
 });
 </script>
 
